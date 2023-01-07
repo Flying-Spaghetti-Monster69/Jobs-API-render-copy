@@ -15,6 +15,12 @@ const rateLimiter = require('express-rate-limit')
 const connectDB = require('./db/connect')
 const authenticateUser = require('./middleware/authentication')
 
+// Swagger
+
+const swaggerUI = require('swagger-ui-express')
+const YAML = require('yamljs')
+const swaggerDocument = YAML.load('./swagger.yaml')
+
 // router
 
 const authRouter = require('./routes/auth');
@@ -23,6 +29,11 @@ const jobsRouter = require('./routes/jobs');
 // error handler
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
+
+app.get('/',(req,res)=>{
+  res.send('<h1>hello, welcome to jobs api<h1><a href="api-docs">Documentation</a>')
+})
+app.use('/api-docs', swaggerUI.serve,swaggerUI.setup(swaggerDocument));
 
 app.set('trust proxy', 1);
 app.use(rateLimiter({
